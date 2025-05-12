@@ -1,7 +1,5 @@
-import sys
-import re
-import xml.etree.ElementTree as ET
-import time
+#!/usr/bin/env python3
+import argparse
 from datetime import datetime
 import os
 
@@ -69,13 +67,14 @@ def generate_junit_xml(test_cases, default_suite_name, output_file):
     tree.write(output_file, encoding="utf-8", xml_declaration=True)
     print(f"JUnit XML report generated: {output_file}")
 
+def main():
+    parser = argparse.ArgumentParser(description="Convert Unity test output to JUnit XML.")
+    parser.add_argument("log_file", help="Path to the Unity test output log file.")
+    parser.add_argument("output_file", help="Path to the output JUnit XML file.")
+    args = parser.parse_args()
+
+    test_cases, default_suite_name = parse_unity_output(args.log_file)
+    generate_junit_xml(test_cases, default_suite_name, args.output_file)
+
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python unity-to-junit.py <test_output.log> <output.xml>")
-        sys.exit(1)
-
-    log_file = sys.argv[1]
-    output_file = sys.argv[2]
-
-    test_cases, default_suite_name = parse_unity_output(log_file)
-    generate_junit_xml(test_cases, default_suite_name, output_file)
+    main()
