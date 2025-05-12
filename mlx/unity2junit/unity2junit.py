@@ -2,6 +2,11 @@
 import argparse
 from datetime import datetime
 import os
+import re
+import sys
+import time
+import xml.etree.ElementTree as ET
+
 
 def parse_unity_output(log_file):
     test_cases = []
