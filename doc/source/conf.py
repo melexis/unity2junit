@@ -22,7 +22,7 @@ copyright = '2025, Anton Manzhelii'
 authors = ['Anton Manzhelii', 'Crt Mori']
 
 # The full version, including alpha/beta/rc tags
-release = distribution('mlx.Anton Manzhelii').version
+release = distribution('mlx.unity2junit').version
 version = '.'.join(release.split('.')[:2])
 
 latex_documents = [
@@ -56,7 +56,7 @@ extensions = [
 # This is the location where we copy the log file to. It is relative to Sphinx'
 # source folder. Sphinx will copy these HTML file(s) to its output folder.
 # (The subfolder won't be created.)
-html_extra_path = ['generated/log.html']
+html_extra_path = []
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
