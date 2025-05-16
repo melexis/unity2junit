@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+
 import argparse
 from datetime import datetime
+from importlib.metadata import version
 import os
 import re
 import xml.etree.ElementTree as ET
+
+
+__version__ = version("mlx-unity2junit")
 
 
 def parse_unity_output(log_file):
@@ -77,6 +83,7 @@ def main():
     parser = argparse.ArgumentParser(description="Convert Unity test output to JUnit XML.")
     parser.add_argument("log_file", help="Path to the Unity test output log file.")
     parser.add_argument("output_file", help="Path to the output JUnit XML file.")
+    parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {__version__}")
     args = parser.parse_args()
 
     test_cases, default_suite_name = parse_unity_output(args.log_file)
