@@ -3,8 +3,6 @@ import argparse
 from datetime import datetime
 import os
 import re
-import sys
-import time
 import xml.etree.ElementTree as ET
 
 
@@ -42,12 +40,14 @@ def parse_unity_output(log_file):
 
     return test_cases, default_suite_name
 
+
 def generate_junit_xml(test_cases, default_suite_name, output_file):
     testsuites = ET.Element("testsuites")
     timestamp = datetime.utcnow().isoformat()
 
     # Create a default testsuite using extracted filename
-    ET.SubElement(testsuites, "testsuite", name=default_suite_name, errors="0", tests="0", failures="0", skipped="0", timestamp=timestamp)
+    ET.SubElement(testsuites, "testsuite", name=default_suite_name, errors="0", tests="0",
+                  failures="0", skipped="0", timestamp=timestamp)
 
     for case in test_cases:
         testsuite = ET.SubElement(
@@ -72,6 +72,7 @@ def generate_junit_xml(test_cases, default_suite_name, output_file):
     tree.write(output_file, encoding="utf-8", xml_declaration=True)
     print(f"JUnit XML report generated: {output_file}")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Convert Unity test output to JUnit XML.")
     parser.add_argument("log_file", help="Path to the Unity test output log file.")
@@ -80,6 +81,7 @@ def main():
 
     test_cases, default_suite_name = parse_unity_output(args.log_file)
     generate_junit_xml(test_cases, default_suite_name, args.output_file)
+
 
 if __name__ == "__main__":
     main()
