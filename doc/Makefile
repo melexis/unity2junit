@@ -16,8 +16,6 @@ ECHO          := echo
 CP            := cp
 
 LOG_FILE      = log.html
-LAYER         ?= ""
-PREFIX        ?= ITEST_-  # becomes ITEST-
 
 # Put it first so that "make" without argument is like "make help".
 help:
