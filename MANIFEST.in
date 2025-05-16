@@ -1,6 +1,7 @@
 include LICENSE
 include README.rst
 include LICENSE
+include SECURITY.md
 
 recursive-include mlx *.py
 recursive-exclude mlx *version__.py
