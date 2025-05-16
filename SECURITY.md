@@ -2,7 +2,7 @@
 
 The script is executed on demand and only modifies the files passed to it.
 This means that security is completely under the control of users who also have
-the option to contain any vulnerabilities.
+the option to contain any vulnerabilities, by not executing the script or check the input files for bugs.
 
 ## Supported Versions
 
