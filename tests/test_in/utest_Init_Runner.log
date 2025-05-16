@@ -1,0 +1,9 @@
+unit_test/utest_Init.c:49:test_init_success:PASS
+unit_test/utest_Init.c:124:test_init_wrong_eeprom_version:PASS
+unit_test/utest_Init.c:135:test_init_i2c_read_fails:PASS
+unit_test/utest_Init.c:145:test_init_i2c_read_fails2:PASS
+unit_test/utest_Init.c:163:test_init_i2c_read_fails3:PASS
+
+-----------------------
+5 Tests 0 Failures 0 Ignored 
+OK
