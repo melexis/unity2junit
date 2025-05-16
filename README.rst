@@ -52,7 +52,7 @@ Usage
 
 .. code-block:: console
 
-    mlx.unity2junit 
+    unity2junit
 
 
 --------
