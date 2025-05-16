@@ -1,4 +1,4 @@
-# Makefile for building example of xunit2rst output in Sphinx documentation
+# Makefile for building example of unity2junit output in Sphinx documentation
 #
 
 # You can set these variables from the command line, and also
@@ -6,19 +6,15 @@
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
-ROBOTDIR      = $(SOURCEDIR)/robot
 OUTDIR        = $(SOURCEDIR)/generated
 BUILDDIR      = _build
 PYTHON        = python3
-XUNIT2RST     = $(PYTHON) -m mlx.xunit2rst
-ROBOT2RST     = $(PYTHON) -m mlx.robot2rst
+UNITY2JUNIT     = $(PYTHON) -m mlx.unity2junit
 ROBOT         = $(PYTHON) -m robot
 RM            := rm -rf
 ECHO          := echo
 CP            := cp
 
-ROBOT_XUNIT   = $(ROBOTDIR)/report.xml
-ITEST_PLAN    = $(OUTDIR)/itest_plan.rst
 LOG_FILE      = log.html
 LAYER         ?= ""
 PREFIX        ?= ITEST_-  # becomes ITEST-
@@ -35,11 +31,5 @@ clean:
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.
 html: Makefile
-	@$(RM) $(ROBOT_XUNIT)
-	@$(RM) $(ITEST_PLAN)
-	-@$(ROBOT) --xunit report.xml -d $(ROBOTDIR) $(ROBOTDIR)/example.robot
-	@$(XUNIT2RST) -v
-	@$(XUNIT2RST) -i $(ROBOT_XUNIT) -o $(OUTDIR)/itest_report.rst -p $(PREFIX) --trim-suffix -l ../$(LOG_FILE) --only $(LAYER) --links --failure-message
-	@$(ROBOT2RST) --robot $(ROBOTDIR)/example.robot --rst $(ITEST_PLAN) -p $(PREFIX) --trim-suffix --type $(PREFIX) --tags ^RQT-$
-	@$(ECHO) -n $(LOG_FILE) | xargs -d ' ' -n 1 -I {} $(CP) $(ROBOTDIR)/{} $(OUTDIR)
+	@$(UNITY2JUNIT) -v
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
