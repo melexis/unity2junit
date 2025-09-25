@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -25,13 +25,13 @@ jobs:
     - name: Build documentation with different Sphinx versions
       run: tox -e doc
     - name: codecov
-      if: matrix.python-version == 3.9
+      if: matrix.python-version == 3.12
       run: tox -e codecov
     - name: Static checks
-      if: matrix.python-version == 3.9
+      if: matrix.python-version == 3.12
       run: tox -e check
     - name: Upload HTML documentation
-      if: matrix.python-version == 3.9
+      if: matrix.python-version == 3.12
       uses: actions/upload-artifact@v4
       with:
         name: html-doc
