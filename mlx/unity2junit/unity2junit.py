@@ -26,9 +26,9 @@ class Unity2Junit:
         """Parses the Unity log file and populates test case data."""
         with open(self.log_file, "r") as f:
             for line in f:
-                match = re.match(r"(.+):(\d+):(.+):(\w+)", line)
+                match = re.match(r"(.+):(\d+):(.+):(PASS|FAIL|SKIP)(?:(.+))?", line)
                 if match:
-                    file_path, line_number, test_name, result = match.groups()
+                    file_path, line_number, test_name, result, reason = match.groups()
                     self.total_tests += 1
 
                     # Extract filename without extension
@@ -57,7 +57,7 @@ class Unity2Junit:
 
         # Create a default testsuite using extracted filename
         ET.SubElement(testsuites, "testsuite", name=self.default_suite_name, errors="0", tests="0",
-                      failures="0", skipped="0", timestamp=timestamp)
+                      failures=self.failures, skipped="0", timestamp=timestamp)
 
         for case in self.test_cases:
             testsuite = ET.SubElement(
