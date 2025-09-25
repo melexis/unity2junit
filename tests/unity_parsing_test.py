@@ -42,6 +42,9 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['suite'], 'INIT')
 
             self.assertEqual(converter.default_suite_name, 'INIT')
+            self.assertEqual(converter.total_tests, 5)
+            self.assertEqual(converter.failures, 0)
+            self.assertEqual(converter.skipped, 0)
 
     def test_parsing_unity_log_and_building_testcases_no_name(self):
         '''Verify that a Unity log file is parsed correctly into test case objects when utest.c is used and that the default testsuite name is UTEST instead of empty.'''
@@ -73,6 +76,9 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['suite'], 'UTEST')
 
             self.assertEqual(converter.default_suite_name, 'UTEST')
+            self.assertEqual(converter.total_tests, 5)
+            self.assertEqual(converter.failures, 0)
+            self.assertEqual(converter.skipped, 0)
 
     def test_parsing_unity_log_and_building_testcases_failed(self):
         '''Verify that a Unity log file is parsed correctly into test case objects when utest_Something.c is used and that Something is used as the default testsuite name.'''
@@ -106,6 +112,9 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['suite'], 'INIT')
 
             self.assertEqual(converter.default_suite_name, 'INIT')
+            self.assertEqual(converter.total_tests, 5)
+            self.assertEqual(converter.failures, 1)
+            self.assertEqual(converter.skipped, 0)
 
 if __name__ == '__main__':
     unittest.main()
