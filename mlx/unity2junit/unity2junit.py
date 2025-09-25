@@ -21,14 +21,15 @@ class Unity2Junit:
         self.default_suite_name = "EMPTY"
         self.total_tests = 0
         self.failures = 0
+        self.skipped = 0
 
     def parse_unity_output(self):
         """Parses the Unity log file and populates test case data."""
         with open(self.log_file, "r") as f:
             for line in f:
-                match = re.match(r"(.+):(\d+):(.+):(\w+)", line)
+                match = re.match(r"(.+):(\d+):(.+):(PASS|FAIL|SKIP)(?:(.+))?", line)
                 if match:
-                    file_path, line_number, test_name, result = match.groups()
+                    file_path, line_number, test_name, result, reason = match.groups()
                     self.total_tests += 1
 
                     # Extract filename without extension
@@ -46,8 +47,10 @@ class Unity2Junit:
                         "result": result.strip(),
                         "suite": filename
                     }
-                    if result.strip() != "PASS":
+                    if result.strip() == "FAIL":
                         self.failures += 1
+                    elif result.strip() == "SKIP":
+                        self.skipped += 1
                     self.test_cases.append(test_case)
 
     def generate_junit_xml(self):
@@ -56,8 +59,8 @@ class Unity2Junit:
         timestamp = datetime.now(datetime.timezone.utc).isoformat()
 
         # Create a default testsuite using extracted filename
-        ET.SubElement(testsuites, "testsuite", name=self.default_suite_name, errors="0", tests="0",
-                      failures="0", skipped="0", timestamp=timestamp)
+        ET.SubElement(testsuites, "testsuite", name=self.default_suite_name, errors="0", tests=self.total_tests,
+                      failures=self.failures, skipped=self.skipped, timestamp=timestamp)
 
         for case in self.test_cases:
             testsuite = ET.SubElement(
