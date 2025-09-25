@@ -20,8 +20,10 @@ class TestUnityParsing(unittest.TestCase):
             test_cases = converter.test_cases
 
             expected_test_cases_Init_Runner = {}
-            expected_test_cases_Init_Runner['classname'] = ['INIT.SWUTEST_INIT-TEST_INIT_SUCCESS', 'INIT.SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION', 'INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS',\
-            'INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2','INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
+            expected_test_cases_Init_Runner['classname'] = [
+                'INIT.SWUTEST_INIT-TEST_INIT_SUCCESS', 'INIT.SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION',
+                'INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS', 'INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
+                'INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
 
             for tc in test_cases:
                 # Find some smart way to check the test case class name
