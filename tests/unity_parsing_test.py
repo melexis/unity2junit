@@ -13,7 +13,9 @@ class TestUnityParsing(unittest.TestCase):
     """Test suite for the Unity log parsing functionality."""
 
     def test_parsing_unity_log_and_building_testcases(self):
-        '''Verify that a Unity log file is parsed correctly into test case objects when utest_Something.c is used and that Something is used as the default testsuite name.'''
+        '''Verify that a Unity log file is parsed correctly into test case objects when utest_Something.c is used and
+        that Something is used as the default testsuite name.'''
+
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
             converter = Unity2Junit(TEST_IN_DIR / 'utest_Init_Runner.log', tmp_output_file.name)
             converter.parse_unity_output()
@@ -27,9 +29,9 @@ class TestUnityParsing(unittest.TestCase):
             expected_test_cases_Init_Runner['line'] = ['49', '124', '135', '145', '163']
             expected_test_cases_Init_Runner['name'] = ['SWUTEST_INIT-TEST_INIT_SUCCESS',
                                                        'SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION',
-                                                       'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS', 'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
+                                                       'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS',
+                                                       'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
                                                        'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
-
 
             for tc in test_cases:
                 # Find some smart way to check the test case class, name and line number
@@ -47,7 +49,9 @@ class TestUnityParsing(unittest.TestCase):
             self.assertEqual(converter.skipped, 0)
 
     def test_parsing_unity_log_and_building_testcases_no_name(self):
-        '''Verify that a Unity log file is parsed correctly into test case objects when utest.c is used and that the default testsuite name is UTEST instead of empty.'''
+        '''Verify that a Unity log file is parsed correctly into test case objects when utest.c is used and that the
+        default testsuite name is UTEST instead of empty.'''
+
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
             converter = Unity2Junit(TEST_IN_DIR / 'utest_Noname_Runner.log', tmp_output_file.name)
             converter.parse_unity_output()
@@ -81,7 +85,9 @@ class TestUnityParsing(unittest.TestCase):
             self.assertEqual(converter.skipped, 0)
 
     def test_parsing_unity_log_and_building_testcases_failed(self):
-        '''Verify that a Unity log file is parsed correctly into test case objects when utest_Something.c is used and that Something is used as the default testsuite name.'''
+        '''Verify that a Unity log file is parsed correctly into test case objects when utest_Something.c is used and
+        that Something is used as the default testsuite name.'''
+
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
             converter = Unity2Junit(TEST_IN_DIR / 'utest_Failed_Runner.log', tmp_output_file.name)
             converter.parse_unity_output()
@@ -95,10 +101,10 @@ class TestUnityParsing(unittest.TestCase):
             expected_test_cases_Failed_Runner['line'] = ['49', '124', '135', '145', '163']
             expected_test_cases_Failed_Runner['name'] = ['SWUTEST_INIT-TEST_INIT_SUCCESS',
                                                          'SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION',
-                                                         'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS', 'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
+                                                         'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS',
+                                                         'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
                                                          'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
             expected_test_cases_Failed_Runner['result'] = ['PASS', 'PASS', 'FAIL', 'PASS', 'PASS']
-
 
             for tc in test_cases:
                 # Find some smart way to check the test case class, name and line number
@@ -115,6 +121,7 @@ class TestUnityParsing(unittest.TestCase):
             self.assertEqual(converter.total_tests, 5)
             self.assertEqual(converter.failures, 1)
             self.assertEqual(converter.skipped, 0)
+
 
 if __name__ == '__main__':
     unittest.main()
