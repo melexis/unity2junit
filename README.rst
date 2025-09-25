@@ -59,3 +59,8 @@ Usage
 Behavior
 --------
 
+-------------
+Code coverage
+-------------
+
+Small test suite runs pytest and produces a `coverage report <coverage/index.html>`
