@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 from importlib.metadata import version
 import os
 import re
@@ -71,7 +71,7 @@ class Unity2Junit:
     def generate_junit_xml(self):
         """Generates the JUnit XML report from the parsed test cases."""
         testsuites = ET.Element("testsuites")
-        timestamp = datetime.now(datetime.timezone.utc).isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat()
 
         # Create a default testsuite using extracted filename
         ET.SubElement(testsuites, "testsuite", name=self.default_suite_name, errors="0", tests=str(self.total_tests),
