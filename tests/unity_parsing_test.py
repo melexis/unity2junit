@@ -282,7 +282,6 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['classname'], expected_classnames.pop(0))
                 self.assertEqual(tc['suite'], 'FORCED_SUITE')  # The suite in test cases remains the same
 
-
     def test_force_suite_name_noname(self):
         ''' Verify that when a suite name is forced, it is used, even for utest.c.'''
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
@@ -302,7 +301,6 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['classname'], expected_classnames.pop(0))
                 self.assertEqual(tc['suite'], 'FORCED_SUITE')  # The suite in test cases remains the same
 
-
     def test_force_suite_name_empty(self):
         ''' Verify that when an empty suite name is forced, the classname has no prefix.'''
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
@@ -321,7 +319,6 @@ class TestUnityParsing(unittest.TestCase):
             for tc in test_cases:
                 self.assertEqual(tc['classname'], expected_classnames.pop(0))
                 self.assertEqual(tc['suite'], '')  # The suite in test cases remains the same
-
 
     def test_force_suite_name_empty_noname(self):
         ''' Verify that when an empty suite name is forced, the classname has no prefix, even for utest.c.'''

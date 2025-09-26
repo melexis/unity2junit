@@ -113,7 +113,8 @@ def main():
     parser.add_argument("output_file", help="Path to the output JUnit XML file.")
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--tc-prefix", help="Prefix to add to each test case name.", default=None)
-    parser.add_argument("--suite-name", help="Force a specific suite name, overriding the filename.", default=None)
+    parser.add_argument("--suite-name", help="Force a specific suite name, overriding the filename rule of using \
+                        string after utest_ as suitename.", default=None)
     args = parser.parse_args()
 
     converter = Unity2Junit(args.log_file, args.output_file, tc_prefix=args.tc_prefix, suite_name=args.suite_name)
