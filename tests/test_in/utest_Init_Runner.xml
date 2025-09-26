@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites>
+    <testsuite name="INIT" errors="0" tests="5" failures="0" skipped="0" timestamp="2025-09-25T13:40:24.403458+00:00" />
+    <testsuite name="INIT.SWUTEST_INIT-TEST_INIT_SUCCESS" timestamp="2025-09-25T13:40:24.403458+00:00" time="0.0" errors="0" tests="1" failures="0" skipped="0">
+        <testcase name="SWUTEST_INIT-TEST_INIT_SUCCESS" classname="INIT.SWUTEST_INIT-TEST_INIT_SUCCESS" time="0.0" />
+    </testsuite>
+    <testsuite name="INIT.SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION" timestamp="2025-09-25T13:40:24.403458+00:00" time="0.0" errors="0" tests="1" failures="0" skipped="0">
+        <testcase name="SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION" classname="INIT.SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION" time="0.0" />
+    </testsuite>
+    <testsuite name="INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS" timestamp="2025-09-25T13:40:24.403458+00:00" time="0.0" errors="0" tests="1" failures="0" skipped="0">
+        <testcase name="SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS" classname="INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS" time="0.0" />
+    </testsuite>
+    <testsuite name="INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2" timestamp="2025-09-25T13:40:24.403458+00:00" time="0.0" errors="0" tests="1" failures="0" skipped="0">
+        <testcase name="SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2" classname="INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2" time="0.0" />
+    </testsuite>
+    <testsuite name="INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3" timestamp="2025-09-25T13:40:24.403458+00:00" time="0.0" errors="0" tests="1" failures="0" skipped="0">
+        <testcase name="SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3" classname="INIT.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3" time="0.0" />
+    </testsuite>
+</testsuites>

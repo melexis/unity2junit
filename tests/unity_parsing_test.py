@@ -2,8 +2,9 @@
 ''' Test suite for functions that set the prefix and prefix_set variables '''
 import unittest
 import tempfile
+from unittest.mock import patch
 from pathlib import Path
-
+from datetime import datetime, timezone
 from mlx.unity2junit.unity2junit import Unity2Junit
 
 TEST_IN_DIR = Path(__file__).parent / 'test_in'
@@ -121,6 +122,25 @@ class TestUnityParsing(unittest.TestCase):
             self.assertEqual(converter.total_tests, 5)
             self.assertEqual(converter.failures, 1)
             self.assertEqual(converter.skipped, 0)
+
+    def test_init_runner_output(self):
+        '''Verify that utest_Init_Runner.log is converted to utest_Init_Runner.xml on a fixed timestamp of
+        2025-09-25T13:40:24.403458+00:00'''
+        fixed_timestamp_str = "2025-09-25T13:40:24.403458"  # Taken from utest_Init_Runner.xml
+        fixed_datetime = datetime.fromisoformat(fixed_timestamp_str).replace(tzinfo=timezone.utc)
+        expected_xml = ''
+
+        with open(TEST_IN_DIR / 'utest_Init_Runner.xml', 'r', encoding='utf-8') as f:
+            expected_xml = f.readlines()
+
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True, encoding='utf-8') as tmp_output_file:
+            with patch('mlx.unity2junit.unity2junit.datetime') as mock_dt:
+                mock_dt.now.return_value = fixed_datetime
+                converter = Unity2Junit(TEST_IN_DIR / 'utest_Init_Runner.log', tmp_output_file.name)
+                converter.convert()
+                tmp_output_file.seek(0)
+                generated_xml = tmp_output_file.readlines()
+                self.assertListEqual(generated_xml, expected_xml)
 
 
 if __name__ == '__main__':

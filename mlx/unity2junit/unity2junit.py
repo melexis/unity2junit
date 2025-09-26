@@ -59,8 +59,8 @@ class Unity2Junit:
         timestamp = datetime.now(datetime.timezone.utc).isoformat()
 
         # Create a default testsuite using extracted filename
-        ET.SubElement(testsuites, "testsuite", name=self.default_suite_name, errors="0", tests=self.total_tests,
-                      failures=self.failures, skipped=self.skipped, timestamp=timestamp)
+        ET.SubElement(testsuites, "testsuite", name=self.default_suite_name, errors="0", tests=str(self.total_tests),
+                      failures=str(self.failures), skipped=str(self.skipped), timestamp=timestamp)
 
         for case in self.test_cases:
             testsuite = ET.SubElement(
@@ -82,6 +82,7 @@ class Unity2Junit:
             )
 
         tree = ET.ElementTree(testsuites)
+        ET.indent(tree, space="    ", level=0)
         tree.write(self.output_file, encoding="utf-8", xml_declaration=True)
         print(f"JUnit XML report generated: {self.output_file}")
 
