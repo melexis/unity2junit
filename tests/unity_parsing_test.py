@@ -202,6 +202,36 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['file'], 'unit_test/utest.c')
                 self.assertEqual(tc['suite'], 'UTEST')  # The suite in test cases remains the same
 
+    def test_force_test_case_prefix_empty(self):
+        ''' Verify that when an empty prefix is forced, the default prefix is used as the testsuite name.'''
+        with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
+            converter = Unity2Junit(TEST_IN_DIR / 'utest_Init_Runner.log', tmp_output_file.name,
+                                    tc_prefix="")
+            converter.parse_unity_output()
+            test_cases = converter.test_cases
+
+            expected_test_cases_Init_Runner = {}
+            expected_test_cases_Init_Runner['classname'] = [
+                'INIT.TEST_INIT_SUCCESS', 'INIT.TEST_INIT_WRONG_EEPROM_VERSION',
+                'INIT.TEST_INIT_I2C_READ_FAILS', 'INIT.TEST_INIT_I2C_READ_FAILS2',
+                'INIT.TEST_INIT_I2C_READ_FAILS3']
+            expected_test_cases_Init_Runner['line'] = ['49', '124', '135', '145', '163']
+            expected_test_cases_Init_Runner['name'] = ['TEST_INIT_SUCCESS',
+                                                       'TEST_INIT_WRONG_EEPROM_VERSION',
+                                                       'TEST_INIT_I2C_READ_FAILS',
+                                                       'TEST_INIT_I2C_READ_FAILS2',
+                                                       'TEST_INIT_I2C_READ_FAILS3']
+
+            for tc in test_cases:
+                # Find some smart way to check the test case class, name and line number
+                self.assertEqual(tc['classname'], expected_test_cases_Init_Runner['classname'].pop(0))
+                self.assertEqual(tc['line'], expected_test_cases_Init_Runner['line'].pop(0))
+                self.assertEqual(tc['name'], expected_test_cases_Init_Runner['name'].pop(0))
+                self.assertEqual(tc['result'], 'PASS')
+
+                self.assertEqual(tc['file'], 'unit_test/utest_Init.c')
+                self.assertEqual(tc['suite'], 'INIT')  # The suite in test cases remains the same
+
 
 if __name__ == '__main__':
     unittest.main()

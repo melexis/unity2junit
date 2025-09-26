@@ -14,7 +14,7 @@ __version__ = version("mlx-unity2junit")
 
 class Unity2Junit:
     """Converts a Unity test output log to a JUnit XML report."""
-    def __init__(self, log_file, output_file, tc_prefix=""):
+    def __init__(self, log_file, output_file, tc_prefix=None):
         self.log_file = log_file
         self.output_file = output_file
         self.test_cases = []
@@ -37,7 +37,7 @@ class Unity2Junit:
                     filename = os.path.basename(file_path).replace("utest_", "").split('.')[0].upper()
                     self.default_suite_name = filename  # Set the default testsuite name
 
-                    if not self.test_case_prefix:
+                    if self.test_case_prefix is None:
                         self.test_case_prefix = f"SWUTEST_{filename}-"
 
                     # Modify the test name: replace the underscore between SWUTEST_ and the next part with a hyphen
@@ -101,7 +101,7 @@ def main():
     parser.add_argument("log_file", help="Path to the Unity test output log file.")
     parser.add_argument("output_file", help="Path to the output JUnit XML file.")
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {__version__}")
-    parser.add_argument("--tc-prefix", help="Prefix to add to each test case name.", default="")
+    parser.add_argument("--tc-prefix", help="Prefix to add to each test case name.", default=None)
     args = parser.parse_args()
 
     converter = Unity2Junit(args.log_file, args.output_file, tc_prefix=args.tc_prefix)
