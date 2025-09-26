@@ -2,10 +2,9 @@
 ''' Test suite for functions that set the prefix and prefix_set variables '''
 import unittest
 import tempfile
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from pathlib import Path
 from datetime import datetime, timezone
-import xml.etree.ElementTree as ET
 from mlx.unity2junit.unity2junit import Unity2Junit
 
 TEST_IN_DIR = Path(__file__).parent / 'test_in'
@@ -127,9 +126,8 @@ class TestUnityParsing(unittest.TestCase):
     def test_init_runner_output(self):
         '''Verify that utest_Init_Runner.log is converted to utest_Init_Runner.xml on a fixed timestamp of
         2025-09-25T13:40:24.403458+00:00'''
-        fixed_timestamp_str = "2025-09-25T13:40:24.403458" # Taken from utest_Init_Runner.xml
+        fixed_timestamp_str = "2025-09-25T13:40:24.403458"  # Taken from utest_Init_Runner.xml
         fixed_datetime = datetime.fromisoformat(fixed_timestamp_str).replace(tzinfo=timezone.utc)
-        iso_timestamp = fixed_datetime.isoformat()
         expected_xml = ''
 
         with open(TEST_IN_DIR / 'utest_Init_Runner.xml', 'r', encoding='utf-8') as f:
