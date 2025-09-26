@@ -14,7 +14,7 @@ __version__ = version("mlx-unity2junit")
 
 class Unity2Junit:
     """Converts a Unity test output log to a JUnit XML report."""
-    def __init__(self, log_file, output_file, tc_prefix=None):
+    def __init__(self, log_file, output_file, tc_prefix=None, suite_name=None):
         self.log_file = log_file
         self.output_file = output_file
         self.test_cases = []
@@ -23,6 +23,7 @@ class Unity2Junit:
         self.failures = 0
         self.skipped = 0
         self.test_case_prefix = tc_prefix
+        self.suite_name = suite_name
 
     def parse_unity_output(self):
         """Parses the Unity log file and populates test case data."""
@@ -35,7 +36,6 @@ class Unity2Junit:
 
                     # Extract filename without extension
                     filename = os.path.basename(file_path).replace("utest_", "").split('.')[0].upper()
-                    self.default_suite_name = filename  # Set the default testsuite name
 
                     if self.test_case_prefix is None:
                         self.test_case_prefix = f"SWUTEST_{filename}-"
@@ -43,13 +43,24 @@ class Unity2Junit:
                     # Modify the test name: replace the underscore between SWUTEST_ and the next part with a hyphen
                     formatted_test_name = f"{self.test_case_prefix}{test_name.upper()}"
 
+                    # Determine the classname to use
+                    if self.suite_name is None:
+                        self.default_suite_name = filename
+                        formatted_classname = f"{self.default_suite_name}.{formatted_test_name}"
+                    else:
+                        self.default_suite_name = self.suite_name
+                        if self.suite_name == "":
+                            formatted_classname = f"{formatted_test_name}"
+                        else:
+                            formatted_classname = f"{self.suite_name}.{formatted_test_name}"
+
                     test_case = {
                         "name": formatted_test_name,
-                        "classname": f"{filename}.{formatted_test_name}",
+                        "classname": formatted_classname,
                         "file": file_path.strip(),
                         "line": line_number.strip(),
                         "result": result.strip(),
-                        "suite": filename
+                        "suite": self.default_suite_name
                     }
                     if result.strip() == "FAIL":
                         self.failures += 1
@@ -102,9 +113,10 @@ def main():
     parser.add_argument("output_file", help="Path to the output JUnit XML file.")
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--tc-prefix", help="Prefix to add to each test case name.", default=None)
+    parser.add_argument("--suite-name", help="Force a specific suite name, overriding the filename.", default=None)
     args = parser.parse_args()
 
-    converter = Unity2Junit(args.log_file, args.output_file, tc_prefix=args.tc_prefix)
+    converter = Unity2Junit(args.log_file, args.output_file, tc_prefix=args.tc_prefix, suite_name=args.suite_name)
     converter.convert()
 
 
