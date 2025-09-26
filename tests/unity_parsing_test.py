@@ -263,6 +263,84 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['file'], 'unit_test/utest.c')
                 self.assertEqual(tc['suite'], 'UTEST')  # The suite in test cases remains the same
 
+    def test_force_suite_name(self):
+        ''' Verify that when a suite name is forced, it is used.'''
+        with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
+            converter = Unity2Junit(TEST_IN_DIR / 'utest_Init_Runner.log', tmp_output_file.name,
+                                    suite_name="FORCED_SUITE")
+            converter.parse_unity_output()
+            test_cases = converter.test_cases
+
+            expected_classnames = [
+                'FORCED_SUITE.SWUTEST_INIT-TEST_INIT_SUCCESS',
+                'FORCED_SUITE.SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION',
+                'FORCED_SUITE.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS',
+                'FORCED_SUITE.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
+                'FORCED_SUITE.SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
+
+            for tc in test_cases:
+                self.assertEqual(tc['classname'], expected_classnames.pop(0))
+                self.assertEqual(tc['suite'], 'FORCED_SUITE')  # The suite in test cases remains the same
+
+    def test_force_suite_name_noname(self):
+        ''' Verify that when a suite name is forced, it is used, even for utest.c.'''
+        with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
+            converter = Unity2Junit(TEST_IN_DIR / 'utest_Noname_Runner.log', tmp_output_file.name,
+                                    suite_name="FORCED_SUITE")
+            converter.parse_unity_output()
+            test_cases = converter.test_cases
+
+            expected_classnames = [
+                'FORCED_SUITE.SWUTEST_UTEST-TEST_INIT_SUCCESS',
+                'FORCED_SUITE.SWUTEST_UTEST-TEST_INIT_WRONG_EEPROM_VERSION',
+                'FORCED_SUITE.SWUTEST_UTEST-TEST_INIT_I2C_READ_FAILS',
+                'FORCED_SUITE.SWUTEST_UTEST-TEST_INIT_I2C_READ_FAILS2',
+                'FORCED_SUITE.SWUTEST_UTEST-TEST_INIT_I2C_READ_FAILS3']
+
+            for tc in test_cases:
+                self.assertEqual(tc['classname'], expected_classnames.pop(0))
+                self.assertEqual(tc['suite'], 'FORCED_SUITE')  # The suite in test cases remains the same
+
+    def test_force_suite_name_empty(self):
+        ''' Verify that when an empty suite name is forced, the classname has no prefix.'''
+        with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
+            converter = Unity2Junit(TEST_IN_DIR / 'utest_Init_Runner.log', tmp_output_file.name,
+                                    suite_name="")
+            converter.parse_unity_output()
+            test_cases = converter.test_cases
+
+            expected_classnames = [
+                'SWUTEST_INIT-TEST_INIT_SUCCESS',
+                'SWUTEST_INIT-TEST_INIT_WRONG_EEPROM_VERSION',
+                'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS',
+                'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
+                'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
+
+            for tc in test_cases:
+                self.assertEqual(tc['classname'], expected_classnames.pop(0))
+                self.assertEqual(tc['suite'], '')  # The suite in test cases remains the same
+
+    def test_force_suite_name_empty_noname(self):
+        ''' Verify that when an empty suite name is forced, the classname has no prefix, even for utest.c.'''
+        with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
+            converter = Unity2Junit(TEST_IN_DIR / 'utest_Noname_Runner.log', tmp_output_file.name,
+                                    suite_name="")
+            converter.parse_unity_output()
+            test_cases = converter.test_cases
+
+            expected_classnames = [
+                'SWUTEST_UTEST-TEST_INIT_SUCCESS',
+                'SWUTEST_UTEST-TEST_INIT_WRONG_EEPROM_VERSION',
+                'SWUTEST_UTEST-TEST_INIT_I2C_READ_FAILS',
+                'SWUTEST_UTEST-TEST_INIT_I2C_READ_FAILS2',
+                'SWUTEST_UTEST-TEST_INIT_I2C_READ_FAILS3']
+
+            for tc in test_cases:
+                self.assertEqual(tc['classname'], expected_classnames.pop(0))
+                self.assertEqual(tc['suite'], '')  # The suite in test cases remains the same
+
+            self.assertEqual(converter.default_suite_name, '')
+
 
 if __name__ == '__main__':
     unittest.main()
