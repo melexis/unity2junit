@@ -172,6 +172,36 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['file'], 'unit_test/utest_Init.c')
                 self.assertEqual(tc['suite'], 'INIT')  # The suite in test cases remains the same
 
+    def test_force_test_case_prefix_noname(self):
+        ''' Verify that when a prefix is forced, it is used as the testsuite name even when utest.c is used.'''
+        with tempfile.NamedTemporaryFile(mode='w', delete=True) as tmp_output_file:
+            converter = Unity2Junit(TEST_IN_DIR / 'utest_Noname_Runner.log', tmp_output_file.name,
+                                    tc_prefix="FORCED_PREFIX-")
+            converter.parse_unity_output()
+            test_cases = converter.test_cases
+
+            expected_test_cases_Noname_Runner = {}
+            expected_test_cases_Noname_Runner['classname'] = [
+                'UTEST.FORCED_PREFIX-TEST_INIT_SUCCESS', 'UTEST.FORCED_PREFIX-TEST_INIT_WRONG_EEPROM_VERSION',
+                'UTEST.FORCED_PREFIX-TEST_INIT_I2C_READ_FAILS', 'UTEST.FORCED_PREFIX-TEST_INIT_I2C_READ_FAILS2',
+                'UTEST.FORCED_PREFIX-TEST_INIT_I2C_READ_FAILS3']
+            expected_test_cases_Noname_Runner['line'] = ['49', '124', '135', '145', '163']
+            expected_test_cases_Noname_Runner['name'] = ['FORCED_PREFIX-TEST_INIT_SUCCESS',
+                                                         'FORCED_PREFIX-TEST_INIT_WRONG_EEPROM_VERSION',
+                                                         'FORCED_PREFIX-TEST_INIT_I2C_READ_FAILS',
+                                                         'FORCED_PREFIX-TEST_INIT_I2C_READ_FAILS2',
+                                                         'FORCED_PREFIX-TEST_INIT_I2C_READ_FAILS3']
+
+            for tc in test_cases:
+                # Find some smart way to check the test case class, name and line number
+                self.assertEqual(tc['classname'], expected_test_cases_Noname_Runner['classname'].pop(0))
+                self.assertEqual(tc['line'], expected_test_cases_Noname_Runner['line'].pop(0))
+                self.assertEqual(tc['name'], expected_test_cases_Noname_Runner['name'].pop(0))
+                self.assertEqual(tc['result'], 'PASS')
+
+                self.assertEqual(tc['file'], 'unit_test/utest.c')
+                self.assertEqual(tc['suite'], 'UTEST')  # The suite in test cases remains the same
+
 
 if __name__ == '__main__':
     unittest.main()
