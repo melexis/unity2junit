@@ -123,6 +123,26 @@ class TestUnityParsing(unittest.TestCase):
             self.assertEqual(converter.failures, 1)
             self.assertEqual(converter.skipped, 0)
 
+    def test_failed_runner_output(self):
+        '''Verify that utest_Failed_Runner.log is converted to utest_Failed_Runner.xml on a fixed timestamp of
+        2025-09-25T13:40:24.403458+00:00 and that the failure message is correctly included.'''
+        fixed_timestamp_str = "2025-09-25T13:40:24.403458"
+        fixed_datetime = datetime.fromisoformat(fixed_timestamp_str).replace(tzinfo=timezone.utc)
+        expected_xml = ''
+
+        with open(TEST_IN_DIR / 'utest_Failed_Runner.xml', 'r', encoding='utf-8') as f:
+            expected_xml = f.readlines()
+
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True, encoding='utf-8') as tmp_output_file:
+            with patch('mlx.unity2junit.unity2junit.datetime') as mock_dt:
+                mock_dt.now.return_value = fixed_datetime
+                converter = Unity2Junit(TEST_IN_DIR / 'utest_Failed_Runner.log', tmp_output_file.name)
+                converter.convert()
+                tmp_output_file.seek(0)
+                generated_xml = tmp_output_file.readlines()
+                print(generated_xml)
+                self.assertListEqual(generated_xml, expected_xml)
+
     def test_init_runner_output(self):
         '''Verify that utest_Init_Runner.log is converted to utest_Init_Runner.xml on a fixed timestamp of
         2025-09-25T13:40:24.403458+00:00'''
