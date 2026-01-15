@@ -140,7 +140,6 @@ class TestUnityParsing(unittest.TestCase):
                 converter.convert()
                 tmp_output_file.seek(0)
                 generated_xml = tmp_output_file.readlines()
-                print(generated_xml)
                 self.assertListEqual(generated_xml, expected_xml)
 
     def test_init_runner_output(self):
