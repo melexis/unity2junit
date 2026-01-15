@@ -106,6 +106,9 @@ class TestUnityParsing(unittest.TestCase):
                                                          'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
                                                          'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
             expected_test_cases_Failed_Runner['result'] = ['PASS', 'PASS', 'FAIL', 'PASS', 'PASS']
+            expected_test_cases_Failed_Runner['reason'] = [None, None,
+                                                           'Function Blah_SecondFunction.  Called more times than '
+                                                           'expected.', None, None]
 
             for tc in test_cases:
                 # Find some smart way to check the test case class, name and line number
@@ -113,6 +116,9 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['line'], expected_test_cases_Failed_Runner['line'].pop(0))
                 self.assertEqual(tc['name'], expected_test_cases_Failed_Runner['name'].pop(0))
                 self.assertEqual(tc['result'], expected_test_cases_Failed_Runner['result'].pop(0))
+                expected_reason = expected_test_cases_Failed_Runner['reason'].pop(0)
+                if expected_reason:
+                    self.assertEqual(tc.get('reason'), expected_reason)
 
                 self.assertEqual(tc['file'], 'unit_test/utest_Init.c')
 
