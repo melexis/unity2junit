@@ -64,6 +64,8 @@ class Unity2Junit:
                     }
                     if result.strip() == "FAIL":
                         self.failures += 1
+                        if reason:
+                            test_case["reason"] = reason.lstrip(':').strip()
                     elif result.strip() == "SKIP":
                         self.skipped += 1
                     self.test_cases.append(test_case)
@@ -89,12 +91,18 @@ class Unity2Junit:
                 skipped="0"
             )
 
-            ET.SubElement(
+            testcase_element = ET.SubElement(
                 testsuite, "testcase",
                 name=case["name"],
                 classname=case["classname"],
                 time="0.0"
             )
+
+            if case["result"] == "FAIL":
+                message = case.get("reason", "No reason")
+                ET.SubElement(testcase_element, "failure", message=message)
+            elif case["result"] == "SKIP":
+                ET.SubElement(testcase_element, "skipped")
 
         tree = ET.ElementTree(testsuites)
         ET.indent(tree, space="    ", level=0)
