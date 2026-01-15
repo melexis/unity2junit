@@ -106,6 +106,9 @@ class TestUnityParsing(unittest.TestCase):
                                                          'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS2',
                                                          'SWUTEST_INIT-TEST_INIT_I2C_READ_FAILS3']
             expected_test_cases_Failed_Runner['result'] = ['PASS', 'PASS', 'FAIL', 'PASS', 'PASS']
+            expected_test_cases_Failed_Runner['reason'] = [None, None,
+                                                           'Function Blah_SecondFunction.  Called more times than '
+                                                           'expected.', None, None]
 
             for tc in test_cases:
                 # Find some smart way to check the test case class, name and line number
@@ -113,6 +116,9 @@ class TestUnityParsing(unittest.TestCase):
                 self.assertEqual(tc['line'], expected_test_cases_Failed_Runner['line'].pop(0))
                 self.assertEqual(tc['name'], expected_test_cases_Failed_Runner['name'].pop(0))
                 self.assertEqual(tc['result'], expected_test_cases_Failed_Runner['result'].pop(0))
+                expected_reason = expected_test_cases_Failed_Runner['reason'].pop(0)
+                if expected_reason:
+                    self.assertEqual(tc.get('reason'), expected_reason)
 
                 self.assertEqual(tc['file'], 'unit_test/utest_Init.c')
 
@@ -122,6 +128,25 @@ class TestUnityParsing(unittest.TestCase):
             self.assertEqual(converter.total_tests, 5)
             self.assertEqual(converter.failures, 1)
             self.assertEqual(converter.skipped, 0)
+
+    def test_failed_runner_output(self):
+        '''Verify that utest_Failed_Runner.log is converted to utest_Failed_Runner.xml on a fixed timestamp of
+        2025-09-25T13:40:24.403458+00:00 and that the failure message is correctly included.'''
+        fixed_timestamp_str = "2025-09-25T13:40:24.403458"
+        fixed_datetime = datetime.fromisoformat(fixed_timestamp_str).replace(tzinfo=timezone.utc)
+        expected_xml = ''
+
+        with open(TEST_IN_DIR / 'utest_Failed_Runner.xml', 'r', encoding='utf-8') as f:
+            expected_xml = f.readlines()
+
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True, encoding='utf-8') as tmp_output_file:
+            with patch('mlx.unity2junit.unity2junit.datetime') as mock_dt:
+                mock_dt.now.return_value = fixed_datetime
+                converter = Unity2Junit(TEST_IN_DIR / 'utest_Failed_Runner.log', tmp_output_file.name)
+                converter.convert()
+                tmp_output_file.seek(0)
+                generated_xml = tmp_output_file.readlines()
+                self.assertListEqual(generated_xml, expected_xml)
 
     def test_init_runner_output(self):
         '''Verify that utest_Init_Runner.log is converted to utest_Init_Runner.xml on a fixed timestamp of
